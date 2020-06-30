@@ -4,6 +4,7 @@ import { createStackNavigator } from 'react-navigation-stack'
 import LaunchScreen from '../Containers/LaunchScreen'
 import CheckinScreen from '../Containers/CheckinScreen'
 
+
 import styles from './Styles/NavigationStyles'
 
 // Manifest of possible screens

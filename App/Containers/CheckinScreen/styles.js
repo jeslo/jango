@@ -6,5 +6,22 @@ export const styles = StyleSheet.create({
     backgroundColor: Colors.rbcwhite,
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  cellItem: {
+    backgroundColor: Colors.rbcblue,
+    padding: 20,
+    marginVertical: 5,
+    marginHorizontal: 10,
+    borderRadius: 7
+  },
+  title: {
+    fontSize: 14
+  },
+  header_footer: {
+    padding: 10,
+    marginVertical: 5,
+    marginHorizontal: 10,
+    borderRadius: 7,
+    backgroundColor: Colors.rbcgreen
   }
 })

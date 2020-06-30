@@ -1,11 +1,20 @@
-import React, {Component} from 'react'
+import React from 'react'
 import {View, TextInput} from 'react-native'
+import {connect} from 'react-redux'
+import Actions from '../../Redux/LoginRedux'
 import TextButton from '../../Components/Button/index'
 
 // Styles
 import {styles} from './styles'
+class LaunchScreen extends React.Component {
+  // constructor (props) {
+  //   super(props)
+  //   this.state = {
+  //     name: 'jeslo',
+  //     age: '27',
+  //   }
+  // }
 
-export default class LaunchScreen extends Component {
   render () {
     console.tron.log(' this.props.', this.props)
     return (
@@ -15,15 +24,42 @@ export default class LaunchScreen extends Component {
           <TextInput placeholder={'Enter Password'} style={styles.textInput} />
           <TextInput placeholder={'Enter Email_ID'} style={styles.textInput} />
           <TextInput
-            placeholder={'Enter Phone number'}
+            placeholder={'Enter PhoneNumber'}
             style={styles.textInput}
           />
           <TextButton
             buttonName='Sign In'
-            onPress={() => this.props.navigation.navigate('CheckinScreen')}
+            // onPress={() =>
+            //   this.props.navigation.navigate('CheckinScreen', {
+            //     name: 'Jeslo',
+            //     age: '27'
+            //   })
+            // }
+            // onPress={this.props.registerUser({
+            //   DisplayName: 'sample string',
+            //   UserName: 'jango1',
+            //   Phone: '9995989080',
+            //   Password: 'samplepasswd',
+            //   Email: 'jeslo@gmail.com'
+            // })}
+            onPress={this.props.loginUser({
+              UserName: 'jango1',
+              Password: 'samplepasswd'
+            })}
           />
         </View>
       </View>
     )
   }
 }
+
+const mapStateToProps = state => ({
+  loader: state.login.logpnLoader
+})
+
+const mapDispatchToProps = dispatch => ({
+  registerUser: params => () => dispatch(Actions.registerUserRequest(params)),
+  loginUser: params => () => dispatch(Actions.getLoginDetailsRequest(params))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(LaunchScreen)
