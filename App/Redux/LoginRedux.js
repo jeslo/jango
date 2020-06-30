@@ -12,12 +12,13 @@ const {Types, Creators} = createActions({
   registerUserSuccess: ['data'],
   registerUserFailure: [],
 
-  getValidUserReuest: ['params'],
-  validateUserFailure: ['data'],
+  getValidUserRequest: ['params'],
+  getValidUserSuccess: ['data'],
+  getValidUserFailure: [],
 
   getPackageListRequest: ['params'],
   getPackageListSuccess: ['data'],
-  getPackageListFailure: ['data']
+  getPackageListFailure: []
 
 })
 
@@ -88,7 +89,7 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.GET_VALID_USER_FAILURE]: handleValidUserFailure,
 
   [Types.GET_PACKAGE_LIST_REQUEST]: setLoginOrSignupLoader,
-  [Types.GET_PACKAGE_LIST_REQUEST_SUCCESS]: handlePackageListSuccess,
-  [Types.GET_PACKAGE_LIST_REQUEST_FAILURE]: handlePackageListFailure
+  [Types.GET_PACKAGE_LIST_SUCCESS]: handlePackageListSuccess,
+  [Types.GET_PACKAGE_LIST_FAILURE]: handlePackageListFailure
 
 })

@@ -1,13 +1,16 @@
 import {put} from 'redux-saga/effects'
 import Actions from '../Redux/LoginRedux'
 
-const LOGIN_URL = 'http://crmservice.rbcentre.com/api/CRMMobApp/AppUserLogin'
+const LOGIN_URL =
+  'http://crmservice.rbcentre.com/api/CRMMobApp/AppUserLogin'
 const REGISTER_URL =
   'http://crmservice.rbcentre.com/api/CRMMobApp/UserRegistration'
 const VALIDATE_USER_URL =
   'http://crmservice.rbcentre.com/api/CRMMobApp/GetValidUser'
 const PACKAGE_LIST_URL =
   'http://crmservice.rbcentre.com/api/CRMMobApp/GetPakagesByUser'
+// const CHECK_IN_URL =
+//   'http://crmservice.rbcentre.com/api/CRMMobApp/UserCheckInProcess'
 
 export function * getLoginData ({params}) {
   const postOptions = {
