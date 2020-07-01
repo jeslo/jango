@@ -16,47 +16,47 @@ import {styles} from './styles'
 const DATA = [
   {
     id: '01',
-    title: 'First Item',
+    title: 'First Package',
   },
   {
     id: '02',
-    title: 'Second Item',
+    title: 'Second Package',
   },
   {
     id: '03',
-    title: 'Third Item',
+    title: 'Third Package',
   },
   {
     id: '04',
-    title: 'First Item',
+    title: 'Fourth Package',
   },
   {
     id: '05',
-    title: 'First Item',
+    title: 'Fifth Package',
   },
   {
     id: '06',
-    title: 'First Item',
+    title: 'Sixth Package',
   },
   {
     id: '07',
-    title: 'First Item',
+    title: 'Seventh Package',
   },
   {
     id: '08',
-    title: 'First Item',
+    title: 'Eighth Package',
   },
   {
     id: '09',
-    title: 'First Item',
+    title: 'Nineth Package',
   },
   {
     id: '10',
-    title: 'First Item',
+    title: 'Tenth Package',
   },
   {
     id: '11',
-    title: 'First Item',
+    title: 'Eleventh Package',
   }
 ]
 
@@ -73,7 +73,7 @@ export default class CheckinScreen extends React.Component {
   renderHeader = () => {
     return (
       <View style={styles.header_footer}>
-        <Text style={styles.textStyle}>Welcome</Text>
+        <Text style={styles.textStyle}>Welcome-DisplayName</Text>
       </View>
     )
   }

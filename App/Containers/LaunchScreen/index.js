@@ -43,8 +43,8 @@ class LaunchScreen extends React.Component {
             //   Email: 'jeslo@gmail.com'
             // })}
             onPress={this.props.loginUser({
-              UserName: 'jango1',
-              Password: 'samplepasswd'
+              UserName: 'jess',
+              Password: 'jess'
             })}
           />
         </View>
@@ -59,7 +59,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   registerUser: params => () => dispatch(Actions.registerUserRequest(params)),
-  loginUser: params => () => dispatch(Actions.getLoginDetailsRequest(params))
+  loginUser: params => () => dispatch(Actions.getLoginDetailsRequest(params)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(LaunchScreen)
