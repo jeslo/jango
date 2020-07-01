@@ -22,8 +22,13 @@ const {Types, Creators} = createActions({
 
   getCheckInRequest: ['params'],
   getCheckInSuccess: ['data'],
-  getCheckInFailure: []
+  getCheckInFailure: [],
 
+  getUpdateDisplayName: ['value'],
+  getUpdateUserName: ['value'],
+  getUpdatePassword: ['value'],
+  getUpdateEmail: ['value'],
+  getUpdatePhoneNumber: ['value']
 })
 
 export const loginTypes = Types
@@ -33,73 +38,123 @@ export default Creators
 
 export const INITIAL_STATE = Immutable({
   registerDetails: {},
-  loginLoader: false,
   loginDetails: {},
   validUserDetails: {},
   packagedetails: {},
   checkinDetails: {},
+
+  loginLoader: false,
+  loginFailed: false,
   registrationFailed: false,
-  loginFailed: false
+  validationFailed: true,
+  packageGetFailed: true,
+
+  displayName: {
+    value: '',
+    error: '',
+  },
+  userName: {
+    value: '',
+    error: '',
+  },
+  password: {
+    value: '',
+    error: '',
+  },
+  email: {
+    value: '',
+    error: '',
+  },
+  phone: {
+    value: '',
+    error: '',
+  }
 })
 
 /* ------------- Reducers ------------- */
 
 export const setLoginOrSignupLoader = state =>
   state.merge({
-    loginLoader: true
+    loginLoader: true,
   })
 export const handleLoginSuccess = (state, {data}) =>
   state.merge({
-    loginDetails: data
+    loginDetails: data,
   })
 export const getLoginDetailsFailure = (state, {data}) =>
   state.merge({
-    loginFailed: true
+    loginFailed: true,
   })
 
-  
 export const handleRegistrationSuccess = (state, {data}) =>
   state.merge({
     loginLoader: false,
-    registrationFailed: true
   })
 export const handleRegistrationFailure = (state, {data}) =>
   state.merge({
-    loginLoader: false
+    loginLoader: false,
+    registrationFailed: true,
   })
-
-
 
 export const handleValidUserSuccess = (state, {data}) =>
   state.merge({
-    validUserDetails: data
+    validUserDetails: data,
   })
 export const handleValidUserFailure = (state, {data}) =>
   state.merge({
-    validUserDetails: data
+    validationFailed: true,
   })
-
 
 export const handlePackageListSuccess = (state, {data}) =>
   state.merge({
-    packagedetails: data
+    packagedetails: data,
   })
 export const handlePackageListFailure = (state, {data}) =>
   state.merge({
-    packagedetails: data
+    packageGetFailed: true,
   })
-
 
 export const handleCheckInSuccess = (state, {data}) =>
   state.merge({
-    checkinDetails: data
+    checkinDetails: data,
   })
-export const handleCheckInFailure = (state, {data}) =>
+export const handleCheckInFailure = (state, {data}) => state.merge({})
+
+export const handleupdateDisplayName = (state, {value}) =>
   state.merge({
-    
+    displayName: state.displayName.merge({
+      value: value,
+      error: '',
+    }),
   })
-
-
+export const handleupdateUserName = (state, {value}) =>
+  state.merge({
+    userName: state.userName.merge({
+      value: value,
+      error: '',
+    }),
+  })
+export const handleupdatePassword = (state, {value}) =>
+  state.merge({
+    password: state.password.merge({
+      value: value,
+      error: '',
+    }),
+  })
+export const handleupdateEmail = (state, {value}) =>
+  state.merge({
+    email: state.email.merge({
+      value: value,
+      error: '',
+    }),
+  })
+export const handleupdatePhone = (state, {value}) =>
+  state.merge({
+    phone: state.phone.merge({
+      value: value,
+      error: '',
+    }),
+  })
 
 /* ------------- Hookup Reducers To Types ------------- */
 
@@ -112,7 +167,6 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.REGISTER_USER_SUCCESS]: handleRegistrationSuccess,
   [Types.REGISTER_USER_FAILURE]: handleRegistrationFailure,
 
-
   [Types.GET_VALID_USER_REQUEST]: setLoginOrSignupLoader,
   [Types.GET_VALID_USER_SUCCESS]: handleValidUserSuccess,
   [Types.GET_VALID_USER_FAILURE]: handleValidUserFailure,
@@ -123,5 +177,12 @@ export const reducer = createReducer(INITIAL_STATE, {
 
   [Types.GET_CHECK_IN_REQUEST]: setLoginOrSignupLoader,
   [Types.GET_CHECK_IN_SUCCESS]: handleCheckInSuccess,
-  [Types.GET_CHECK_IN_FAILURE]: handleCheckInFailure
+  [Types.GET_CHECK_IN_FAILURE]: handleCheckInFailure,
+
+  [Types.GET_UPDATE_DISPLAY_NAME]: handleupdateDisplayName,
+  [Types.GET_UPDATE_USER_NAME]: handleupdateUserName,
+  [Types.GET_UPDATE_PASSWORD]: handleupdatePassword,
+  [Types.GET_UPDATE_EMAIL]: handleupdateEmail,
+  [Types.GET_UPDATE_PHONE_NUMBER]: handleupdatePhone
+
 })

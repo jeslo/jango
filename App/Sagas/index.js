@@ -6,7 +6,7 @@ import {loginTypes} from '../Redux/LoginRedux'
 
 /* ------------- Sagas ------------- */
 
-import {registerUser, getLoginData, validateUser, packageList, checkIn} from './LoginSaga'
+import {registerUser, getLoginData, validateUser, packageList, checkIn, updateUsername} from './LoginSaga'
 
 /* ------------- Connect Types To Sagas ------------- */
 
@@ -20,7 +20,6 @@ export default function * root () {
     takeLatest(loginTypes.GET_VALID_USER_REQUEST, validateUser),
     takeLatest(loginTypes.GET_PACKAGE_LIST_REQUEST, packageList),
     takeLatest(loginTypes.GET_CHECK_IN_REQUEST, checkIn)
-
     // some sagas receive extra parameters in addition to an action
     // takeLatest(GithubTypes.USER_REQUEST, getUserAvatar, api)
   ])

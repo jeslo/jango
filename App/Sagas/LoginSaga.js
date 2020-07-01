@@ -1,8 +1,7 @@
 import {put} from 'redux-saga/effects'
+import {NavigationActions} from 'react-navigation'
 import Actions from '../Redux/LoginRedux'
-
-//const LOGIN_URL = 'https://run.mocky.io/v3/9b4de199-48a1-4f4c-ab4e-f5173263eec1'
-// const LOGIN_URL = 'https://9a912bee5ee6.ngrok.io'
+import _ from 'lodash'
 
 const LOGIN_URL = 'http://crmservice.rbcentre.com/api/CRMMobApp/AppUserLogin'
 const REGISTER_URL =
@@ -19,19 +18,20 @@ export function * getLoginData ({params}) {
     method: 'POST',
     headers: {
       'Content-type': 'application/json',
-      Accept: 'application/json'
+      Accept: 'application/json',
     },
-    body: JSON.stringify(params)
+    body: JSON.stringify(params),
   }
   const result = yield fetch(LOGIN_URL, postOptions)
     .then(resp => resp.json())
     .then(r => r)
     .catch(e => console.tron.log('>>>>>>eeeee, e'))
-  //console.warn('>>>', result)
+  // console.warn('>>>', result)
   if (result.error) return yield put(Actions.getLoginDetailsFailure())
   yield put(Actions.getLoginDetailsSuccess(result))
   if (result.ResultMsg === 'successfully logined') {
     yield put(Actions.getValidUserRequest({phone: result.Result.phone}))
+    yield put(NavigationActions.navigate({routeName: 'CheckinScreen'}))
   }
 }
 
@@ -40,16 +40,17 @@ export function * registerUser ({params}) {
     method: 'POST',
     headers: {
       'Content-type': 'application/json',
-      Accept: 'application/json'
+      Accept: 'application/json',
     },
-    body: JSON.stringify(params)
+    body: JSON.stringify(params),
   }
   const result = yield fetch(REGISTER_URL, postOptions)
     .then(resp => resp.json())
     .then(r => r)
     .catch(e => e)
-  if (result.error) return yield put(Actions.registerUserFailure())
+  if (result.error || _.get(result, 'result', '') !== 'Registered successfully!') return yield put(Actions.registerUserFailure())
   yield put(Actions.registerUserSuccess(result))
+  yield put(NavigationActions.navigate({routeName: 'CheckinScreen'}))
   console.tron.log('>>>>rsponse', result)
   //   if (result.error)
 }
@@ -59,7 +60,7 @@ export function * validateUser ({params}) {
     method: 'POST',
     headers: {
       'Content-type': 'application/json',
-      Accept: 'application/json'
+      Accept: 'application/json',
     },
     body: JSON.stringify(params),
   }
@@ -67,11 +68,15 @@ export function * validateUser ({params}) {
     .then(resp => resp.json())
     .then(r => r)
     .catch(e => e)
-  //console.warn('@@@@@@@@@GUID******', result)
-  if (result.error) {
-    yield put(Actions.getValidUserFailure(result))
-  } else {
-    yield put(Actions.getPackageListRequest({ContactId: result.Result.guId}))
+
+  if (result.error) return yield put(Actions.getValidUserFailure(result))
+  yield put(Actions.getValidUserSuccess(result))
+  if (_.get(result, 'Result.guId', '')) {
+    yield put(
+      Actions.getPackageListRequest({
+        ContactId: _.get(result, 'Result.guId', '')
+      })
+    )
   }
 }
 
@@ -82,7 +87,7 @@ export function * packageList ({params}) {
       'Content-type': 'application/json',
       Accept: 'application/json',
     },
-    body: JSON.stringify(params)
+    body: JSON.stringify(params),
   }
   const result = yield fetch(PACKAGE_LIST_URL, postOptions)
     .then(resp => resp.json())
@@ -90,9 +95,7 @@ export function * packageList ({params}) {
     .catch(e => e)
   if (result.error) {
     yield put(Actions.getPackageListFailure(result))
-    
   } else {
-    console.warn('******packages*****', result)
     yield put(Actions.getPackageListSuccess(result))
   }
 }
