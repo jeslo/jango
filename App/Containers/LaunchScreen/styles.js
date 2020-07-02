@@ -7,7 +7,9 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
-
+  text: {
+    paddingTop: 20
+  },
   textInput: {
     paddingHorizontal: 20,
     backgroundColor: Colors.rbcwhite,

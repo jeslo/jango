@@ -29,10 +29,10 @@ export function * getLoginData ({params}) {
   // console.warn('>>>', result)
   if (result.error) return yield put(Actions.getLoginDetailsFailure())
   yield put(Actions.getLoginDetailsSuccess(result))
-  if (result.ResultMsg === 'successfully logined') {
+  if (result.Flag === 1) {
     yield put(Actions.getValidUserRequest({phone: result.Result.phone}))
     yield put(NavigationActions.navigate({routeName: 'CheckinScreen'}))
-  }
+  } else return yield put(Actions.getLoginDetailsFailure(result))
 }
 
 export function * registerUser ({params}) {
@@ -48,11 +48,12 @@ export function * registerUser ({params}) {
     .then(resp => resp.json())
     .then(r => r)
     .catch(e => e)
-  if (result.error || _.get(result, 'result', '') !== 'Registered successfully!') return yield put(Actions.registerUserFailure())
-  yield put(Actions.registerUserSuccess(result))
-  yield put(NavigationActions.navigate({routeName: 'CheckinScreen'}))
+  if (result.Flag === 1) {
+    yield put(Actions.registerUserSuccess(result))
+    yield put(NavigationActions.navigate({routeName: 'CheckinScreen'}))
+  } else return yield put(Actions.registerUserFailure(result))
+
   console.tron.log('>>>>rsponse', result)
-  //   if (result.error)
 }
 
 export function * validateUser ({params}) {
@@ -71,10 +72,10 @@ export function * validateUser ({params}) {
 
   if (result.error) return yield put(Actions.getValidUserFailure(result))
   yield put(Actions.getValidUserSuccess(result))
-  if (_.get(result, 'Result.guId', '')) {
+  if (result.Flag === 1 && _.get(result, 'Result.guId', '')) {
     yield put(
       Actions.getPackageListRequest({
-        ContactId: _.get(result, 'Result.guId', '')
+        ContactId: _.get(result, 'Result.guId', ''),
       })
     )
   }
@@ -93,10 +94,10 @@ export function * packageList ({params}) {
     .then(resp => resp.json())
     .then(r => r)
     .catch(e => e)
-  if (result.error) {
-    yield put(Actions.getPackageListFailure(result))
-  } else {
+  if (result.Flag === 1) {
     yield put(Actions.getPackageListSuccess(result))
+  } else {
+    yield put(Actions.getPackageListFailure(result))
   }
 }
 export function * checkIn ({params}) {
@@ -112,6 +113,6 @@ export function * checkIn ({params}) {
     .then(resp => resp.json())
     .then(r => r)
     .catch(e => e)
-  if (result.Result === 'Success') yield put(Actions.getCheckInSuccess(result))
+  if (result.Flag === 1) yield put(Actions.getCheckInSuccess(result))
   yield put(Actions.getCheckInFailure(result))
 }

@@ -1,16 +1,17 @@
 import React from 'react'
 import {View, TextInput, Text} from 'react-native'
 import {connect} from 'react-redux'
+import Actions from '../../Redux/LoginRedux'
 // import {createStore} from 'redux'
 // import AsyncStorage from '@react-native-community/async-storage'
 // import {persiStore,persistReducer} from 'redux-persist'
 // import {createLogger} from 'redux-logger'
-import Actions from '../../Redux/LoginRedux'
 import TextButton from '../../Components/Button/index'
 import OptionalView from '../../Components/OptionalView'
 
 // Styles
 import {styles} from './styles'
+import {TouchableOpacity} from 'react-native-gesture-handler'
 
 // const persistConfig = {
 //   key: 'root',
@@ -20,17 +21,10 @@ import {styles} from './styles'
 // const persistedReducer = persistReducer(persistConfig, rootReducer)
 
 class LaunchScreen extends React.Component {
-  // constructor (props) {
-  //   super(props)
-  //   this.state = {
-  //     name: 'jeslo',
-  //     age: '27',
-  //   }
-  // }
   fetchLogin = () => {
     this.props.getLoginData({
       UserName: this.props.userName,
-      Password: this.props.password
+      Password: this.props.password,
     })
   }
 
@@ -40,9 +34,10 @@ class LaunchScreen extends React.Component {
       UserName: this.props.userName,
       Phone: this.props.phone,
       Password: this.props.password,
-      Email: this.props.email
+      Email: this.props.email,
     })
   }
+
 
   onChangeDisplayName = text => {
     this.props.updateDisplayName(text)
@@ -111,12 +106,21 @@ class LaunchScreen extends React.Component {
               value={this.props.phone}
             />
           </OptionalView>
-          {this.props.isLogin ? <Text>showing testing etc</Text> : null}
-
           <TextButton
-            buttonName={this.props.isLogin ? 'Sign In' : 'Sign Up'}
+            buttonName={this.props.isLogin ? 'Login' : 'Signup'}
             onPress={this.props.isLogin ? this.fetchLogin : this.fetchSignUp}
           />
+          {this.props.isLogin ? (
+            <TouchableOpacity onPress={this.props.setLoginStatus(false)}>
+              <Text style={styles.text}>New member click here to Signup</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity onPress={this.props.setLoginStatus(true)}>
+              <Text style={styles.text}>
+                Haven an account click here to Login
+              </Text>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
     )
@@ -124,7 +128,7 @@ class LaunchScreen extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  isLogin: state.isLogin,
+  isLogin: state.login.isLogin,
   loader: state.login.loginLoader,
   displayName: state.login.displayName.value,
   userName: state.login.userName.value,
@@ -136,16 +140,13 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   registerUser: params => dispatch(Actions.registerUserRequest(params)),
   getLoginData: params => dispatch(Actions.getLoginDetailsRequest(params)),
-
   updateDisplayName: value => dispatch(Actions.getUpdateDisplayName(value)),
-
   updateUserName: value => dispatch(Actions.getUpdateUserName(value)),
-
   updatePassword: value => dispatch(Actions.getUpdatePassword(value)),
-
   updatePhoneNumber: value => dispatch(Actions.getUpdatePhoneNumber(value)),
-
   updateEmailId: value => dispatch(Actions.getUpdateEmail(value)),
+
+  setLoginStatus: value => () => dispatch(Actions.setLoginFlag(value))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(LaunchScreen)
