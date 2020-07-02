@@ -1,5 +1,5 @@
 import React from 'react'
-import {View, TextInput, Text} from 'react-native'
+import {View, TextInput, Text, TouchableOpacity, Image} from 'react-native'
 import {connect} from 'react-redux'
 import Actions from '../../Redux/LoginRedux'
 // import {createStore} from 'redux'
@@ -8,10 +8,11 @@ import Actions from '../../Redux/LoginRedux'
 // import {createLogger} from 'redux-logger'
 import TextButton from '../../Components/Button/index'
 import OptionalView from '../../Components/OptionalView'
+import {email, tenNumber, name, empty} from '../../Transforms/ConvertFromKelvin'
+// import {email, tenNumber, name} from '../../Transforms'
 
 // Styles
 import {styles} from './styles'
-import {TouchableOpacity} from 'react-native-gesture-handler'
 
 // const persistConfig = {
 //   key: 'root',
@@ -34,11 +35,21 @@ class LaunchScreen extends React.Component {
       UserName: this.props.userName,
       Phone: this.props.phone,
       Password: this.props.password,
-      Email: this.props.email,
+      Email: this.props.email
     })
   }
 
-
+  validateEmail = text => {
+    if (email(text) === true) {
+      console.log('invalid email')
+    }
+  }
+  validatePhone = text => {
+    if (tenNumber(text) === true) {
+      console.log('invalid phoneNumber')
+    }
+  }
+  
   onChangeDisplayName = text => {
     this.props.updateDisplayName(text)
   }
@@ -64,6 +75,7 @@ class LaunchScreen extends React.Component {
     console.tron.log(' this.props.', this.props)
     return (
       <View style={styles.conatiner}>
+        <Image source={require('./Images/RBClogo.jpg')} />
         <View style={styles.signUPbox}>
           <OptionalView hide={this.props.isLogin}>
             <TextInput
@@ -96,6 +108,7 @@ class LaunchScreen extends React.Component {
               placeholder={'Enter Email_ID'}
               style={styles.textInput}
               value={this.props.email}
+              onEndEditing={this.validateEmail(this.props.email)}
             />
           </OptionalView>
           <OptionalView hide={this.props.isLogin}>
@@ -104,6 +117,8 @@ class LaunchScreen extends React.Component {
               placeholder={'Enter PhoneNumber'}
               style={styles.textInput}
               value={this.props.phone}
+              onEndEditing={this.validatePhone(this.props.phone)}
+              
             />
           </OptionalView>
           <TextButton
@@ -134,7 +149,7 @@ const mapStateToProps = state => ({
   userName: state.login.userName.value,
   password: state.login.password.value,
   email: state.login.email.value,
-  phone: state.login.phone.value
+  phone: state.login.phone.value,
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -146,7 +161,7 @@ const mapDispatchToProps = dispatch => ({
   updatePhoneNumber: value => dispatch(Actions.getUpdatePhoneNumber(value)),
   updateEmailId: value => dispatch(Actions.getUpdateEmail(value)),
 
-  setLoginStatus: value => () => dispatch(Actions.setLoginFlag(value))
+  setLoginStatus: value => () => dispatch(Actions.setLoginFlag(value)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(LaunchScreen)

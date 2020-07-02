@@ -50,7 +50,7 @@ export function * registerUser ({params}) {
     .catch(e => e)
   if (result.Flag === 1) {
     yield put(Actions.registerUserSuccess(result))
-    yield put(NavigationActions.navigate({routeName: 'CheckinScreen'}))
+    //yield put(NavigationActions.navigate({routeName: 'CheckinScreen'}))
   } else return yield put(Actions.registerUserFailure(result))
 
   console.tron.log('>>>>rsponse', result)
@@ -76,9 +76,9 @@ export function * validateUser ({params}) {
     yield put(
       Actions.getPackageListRequest({
         ContactId: _.get(result, 'Result.guId', ''),
-      })
+      }),
     )
-  }
+  } else return yield put(Actions.getValidUserFailure(result))
 }
 
 export function * packageList ({params}) {
@@ -95,9 +95,11 @@ export function * packageList ({params}) {
     .then(r => r)
     .catch(e => e)
   if (result.Flag === 1) {
+    //yield put(Actions.handleValidUser(false))
     yield put(Actions.getPackageListSuccess(result))
   } else {
     yield put(Actions.getPackageListFailure(result))
+    //yield put(Actions.handleValidUser(true))
   }
 }
 export function * checkIn ({params}) {

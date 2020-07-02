@@ -29,7 +29,9 @@ const {Types, Creators} = createActions({
   getUpdatePassword: ['value'],
   getUpdateEmail: ['value'],
   getUpdatePhoneNumber: ['value'],
-  setLoginFlag: ['status']
+  setLoginFlag: ['status'],
+  setValidUserFlag: ['status']
+
 })
 
 export const loginTypes = Types
@@ -51,6 +53,7 @@ export const INITIAL_STATE = Immutable({
   validationFailed: false,
   packageGetFailed: false,
   isLogin: true,
+  packageEmpty: false,
 
   displayName: {
     value: '',
@@ -87,6 +90,7 @@ export const handleLoginSuccess = (state, {data}) =>
 export const getLoginDetailsFailure = (state, {data}) =>
   state.merge({
     loginFailed: true,
+    loginDetails: data
   })
 
 export const handleRegistrationSuccess = (state, {data}) =>
@@ -108,15 +112,18 @@ export const handleValidUserSuccess = (state, {data}) =>
 export const handleValidUserFailure = (state, {data}) =>
   state.merge({
     validationFailed: true,
+    packageEmpty: true
   })
 
 export const handlePackageListSuccess = (state, {data}) =>
   state.merge({
-    packagedetails: data
+    packagedetails: data,
+    packageEmpty: false
   })
 export const handlePackageListFailure = (state, {data}) =>
   state.merge({
     packageGetFailed: true,
+    packageEmpty: true
   })
 
 export const handleCheckInSuccess = (state, {data}) =>
@@ -164,6 +171,10 @@ export const handleGetLogin = (state, {status}) =>
   state.merge({
     isLogin: status
   })
+// export const handleValidUser = (state, {status}) =>
+//   state.merge({
+//     packageEmpty: status
+//   })
 
 /* ------------- Hookup Reducers To Types ------------- */
 
@@ -194,6 +205,7 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.GET_UPDATE_EMAIL]: handleupdateEmail,
   [Types.GET_UPDATE_PHONE_NUMBER]: handleupdatePhone,
 
-  [Types.SET_LOGIN_FLAG]: handleGetLogin
+  [Types.SET_LOGIN_FLAG]: handleGetLogin,
+  //[Types.SET_VALID_USER_FLAG]: handleValidUser
 
 })

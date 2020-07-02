@@ -15,8 +15,8 @@ class CheckinScreen extends React.Component {
           dueAmount: _.get(item, 'DueAmount', '')
         })}>
         <View style={styles.cellItem}>
-          <Text style={styles.title}> { _.get(item, 'productName', '')}</Text>
-          <Text style={styles.title}> { _.get(item, 'DueAmount', '') }</Text>
+          <Text style={styles.title}> {_.get(item, 'productName', '')}</Text>
+          <Text style={styles.title}> {_.get(item, 'DueAmount', '')}</Text>
         </View>
       </TouchableOpacity>
     )
@@ -44,31 +44,48 @@ class CheckinScreen extends React.Component {
   handleRefresh = () => {
     this.setState({
       refreshing: true,
-      seed: this.state.seed + 1,
+      seed: this.state.seed + 1
     })
   }
+  renderFailureCard = () => {
+    if (!this.props.packageEmpty) return null
+    return (
+      <View style={{backgroundColor: 'orange', borderRadius: 10, alignSelf: 'center', paddingVertical: 30, paddingHorizontal: 20, margin: 20}}>
+        <Text style={styles.contactRbcText}>
+          Hi please contact RBC team to subscribe your packages
+        </Text>
+      </View>
+    )
+  }
+
+  renderPackaageList = () => {
+    if (this.props.packageEmpty) return null
+    return <FlatList
+      data={this.props.packageList}
+      renderItem={this.renderItem}
+  />
+  }
   render () {
-    console.tron.log('>>CheckinScreen>>', this.props)
     return (
       <SafeAreaView>
-        <FlatList
-          data={this.props.packageList}
-          renderItem={this.renderItem}
-          ListHeaderComponent={this.renderHeader}
-          ListFooterComponent={this.renderFooter}
-          ItemSeparatorComponent={this.ListViewItemSeparator}
-          stickyHeaderIndices={[0]}
-        />
+
+        <this.renderFailureCard />
+        <this.renderPackaageList />
       </SafeAreaView>
     )
   }
 }
-
 const mapStateToProps = state => ({
-  packageList: _.get(state, 'login.packagedetails.Packagedata.packageItems', []),
+  packageEmpty: state.login.packageEmpty,
+  packageList: _.get(
+    state,
+    'login.packagedetails.Packagedata.packageItems',
+    []
+  ),
   displayName: _.get(state, 'login.packagedetails.Packagedata.userName')
 })
 const mapDispatchToProps = dispatch => ({
   checkInUser: params => () => dispatch(Actions.getCheckInRequest(params))
+  //checkValidCustormer: value => () => dispatch(Actions.setValidUserFlag(value))
 })
 export default connect(mapStateToProps, mapDispatchToProps)(CheckinScreen)
