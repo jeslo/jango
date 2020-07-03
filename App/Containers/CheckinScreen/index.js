@@ -1,7 +1,6 @@
 import React from 'react'
-import {View, Text, SafeAreaView, FlatList} from 'react-native'
+import {View, Text, SafeAreaView, FlatList, TouchableOpacity, BackHandler} from 'react-native'
 import _ from 'lodash'
-import {TouchableOpacity} from 'react-native-gesture-handler'
 import {styles} from './styles'
 import {connect} from 'react-redux'
 import Actions from '../../Redux/LoginRedux'
@@ -11,7 +10,19 @@ import Popup from '../../Components/Popup'
 class CheckinScreen extends React.Component {
   state = {
     show: false,
-    item: {},
+    item: {}
+  }
+
+  onBackPress = () => {
+    return true
+  }
+
+  componentDidMount () {
+    BackHandler.addEventListener('hardwareBackPress', this.onBackPress)
+  }
+
+  componentWillUnmount () {
+    BackHandler.removeEventListener('hardwareBackPress', this.onBackPress)
   }
 
   logOut = () => {
@@ -24,18 +35,12 @@ class CheckinScreen extends React.Component {
 
   renderItem = ({item}) => {
     return (
-      <View>
+      <View key={item.productName}>
         <TouchableOpacity
-          // onPress={() => {
-          //   {
-          //     this.poupUp
-          //   }
-          //   this.setState({show: true})
-          // }}
           onPress={() =>
             this.setState({
               show: true,
-              item,
+              item
             })
           }>
           <View style={styles.cellItem}>
@@ -87,8 +92,7 @@ class CheckinScreen extends React.Component {
                 paddingBottom: 20,
                 paddingLeft: 20,
                 color: 'red',
-                fontSize: 25,
-               
+                fontSize: 25  
               }}
               onPress={() => this.setState({show: false})}>
               X
