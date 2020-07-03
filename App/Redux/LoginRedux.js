@@ -24,14 +24,15 @@ const {Types, Creators} = createActions({
   getCheckInSuccess: ['data'],
   getCheckInFailure: [],
 
-  getUpdateDisplayName: ['value'],
-  getUpdateUserName: ['value'],
-  getUpdatePassword: ['value'],
-  getUpdateEmail: ['value'],
-  getUpdatePhoneNumber: ['value'],
+  getUpdateDisplayName: ['key', 'value'],
+  getUpdateUserName: ['key', 'value'],
+  getUpdatePassword: ['key', 'value'],
+  getUpdateEmail: ['key', 'value'],
+  getUpdatePhoneNumber: ['key', 'value'],
   setLoginFlag: ['status'],
-  setValidUserFlag: ['status']
-
+  setValidUserFlag: ['status'],
+  logoutUser: [],
+  popupCard: []
 })
 
 export const loginTypes = Types
@@ -45,7 +46,6 @@ export const INITIAL_STATE = Immutable({
   validUserDetails: {},
   packagedetails: {},
   checkinDetails: {},
-  
 
   loginLoader: false,
   loginFailed: false,
@@ -54,6 +54,7 @@ export const INITIAL_STATE = Immutable({
   packageGetFailed: false,
   isLogin: true,
   packageEmpty: false,
+  popupFlag: false,
 
   displayName: {
     value: '',
@@ -74,7 +75,7 @@ export const INITIAL_STATE = Immutable({
   phone: {
     value: '',
     error: '',
-  }
+  },
 })
 
 /* ------------- Reducers ------------- */
@@ -90,19 +91,19 @@ export const handleLoginSuccess = (state, {data}) =>
 export const getLoginDetailsFailure = (state, {data}) =>
   state.merge({
     loginFailed: true,
-    loginDetails: data
+    loginDetails: data,
   })
 
 export const handleRegistrationSuccess = (state, {data}) =>
   state.merge({
     loginLoader: false,
-    isLogin: true
+    isLogin: true,
   })
 export const handleRegistrationFailure = (state, {data}) =>
   state.merge({
     loginLoader: false,
     registrationFailed: true,
-    isLogin: false
+    isLogin: false,
   })
 
 export const handleValidUserSuccess = (state, {data}) =>
@@ -112,18 +113,18 @@ export const handleValidUserSuccess = (state, {data}) =>
 export const handleValidUserFailure = (state, {data}) =>
   state.merge({
     validationFailed: true,
-    packageEmpty: true
+    packageEmpty: true,
   })
 
 export const handlePackageListSuccess = (state, {data}) =>
   state.merge({
     packagedetails: data,
-    packageEmpty: false
+    packageEmpty: false,
   })
 export const handlePackageListFailure = (state, {data}) =>
   state.merge({
     packageGetFailed: true,
-    packageEmpty: true
+    packageEmpty: true,
   })
 
 export const handleCheckInSuccess = (state, {data}) =>
@@ -132,49 +133,50 @@ export const handleCheckInSuccess = (state, {data}) =>
   })
 export const handleCheckInFailure = (state, {data}) => state.merge({})
 
-export const handleupdateDisplayName = (state, {value}) =>
+export const handleupdateDisplayName = (state, {key, value}) =>
   state.merge({
     displayName: state.displayName.merge({
-      value: value,
-      error: '',
+      [key]: value,
+      error: key === 'error' ? value : '',
     }),
   })
-export const handleupdateUserName = (state, {value}) =>
+export const handleupdateUserName = (state, {key, value}) =>
   state.merge({
     userName: state.userName.merge({
-      value: value,
-      error: '',
+      [key]: value,
+      error: key === 'error' ? value : '',
     }),
   })
-export const handleupdatePassword = (state, {value}) =>
+export const handleupdatePassword = (state, {key, value}) =>
   state.merge({
     password: state.password.merge({
-      value: value,
-      error: '',
+      [key]: value,
+      error: key === 'error' ? value : '',
     }),
   })
-export const handleupdateEmail = (state, {value}) =>
+export const handleupdateEmail = (state, {key, value}) =>
   state.merge({
     email: state.email.merge({
-      value: value,
-      error: '',
+      [key]: value,
+      error: key === 'error' ? value : '',
     }),
   })
-export const handleupdatePhone = (state, {value}) =>
+export const handleupdatePhone = (state, {key, value}) =>
   state.merge({
     phone: state.phone.merge({
-      value: value,
-      error: '',
+      [key]: value,
+      error: key === 'error' ? value : '',
     }),
   })
 export const handleGetLogin = (state, {status}) =>
   state.merge({
     isLogin: status
   })
-// export const handleValidUser = (state, {status}) =>
-//   state.merge({
-//     packageEmpty: status
-//   })
+export const handlePopup = (state) =>
+  state.merge({
+    popupCard: true
+  })
+export const handleLogoutUser = (state) => INITIAL_STATE
 
 /* ------------- Hookup Reducers To Types ------------- */
 
@@ -194,7 +196,6 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.GET_PACKAGE_LIST_REQUEST]: setLoginOrSignupLoader,
   [Types.GET_PACKAGE_LIST_SUCCESS]: handlePackageListSuccess,
   [Types.GET_PACKAGE_LIST_FAILURE]: handlePackageListFailure,
-
   [Types.GET_CHECK_IN_REQUEST]: setLoginOrSignupLoader,
   [Types.GET_CHECK_IN_SUCCESS]: handleCheckInSuccess,
   [Types.GET_CHECK_IN_FAILURE]: handleCheckInFailure,
@@ -206,6 +207,6 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.GET_UPDATE_PHONE_NUMBER]: handleupdatePhone,
 
   [Types.SET_LOGIN_FLAG]: handleGetLogin,
-  //[Types.SET_VALID_USER_FLAG]: handleValidUser
-
+  [Types.LOGOUT_USER]: handleLogoutUser,
+  [Types.POPUP_CARD]: handlePopup
 })

@@ -29,4 +29,7 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
     padding: 20
   },
+  button: {
+
+  }
 })

@@ -1,4 +1,5 @@
 import '../Config'
+import { SafeAreaView } from 'react-native'
 import DebugConfig from '../Config/DebugConfig'
 import React, { Component } from 'react'
 import { Provider } from 'react-redux'
@@ -21,7 +22,9 @@ class App extends Component {
   render () {
     return (
       <Provider store={store}>
-        <RootContainer />
+        <SafeAreaView style={{ flex: 1 }}>
+          <RootContainer />
+        </SafeAreaView>
       </Provider>
     )
   }

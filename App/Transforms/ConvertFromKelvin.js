@@ -22,9 +22,9 @@ const name = text => {
   return /^[a-zA-Z ]{2,30}$/.test(text)
 }
 
-export default ({
+module.exports = {
   email,
   tenNumber,
   name,
   empty
-})
+}

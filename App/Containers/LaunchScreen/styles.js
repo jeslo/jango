@@ -4,7 +4,7 @@ export const styles = StyleSheet.create({
   conatiner: {
     flex: 1,
     backgroundColor: Colors.rbcwhite,
-    justifyContent: 'center',
+    // justifyContent: 'center',
     alignItems: 'center'
   },
   text: {
@@ -20,6 +20,7 @@ export const styles = StyleSheet.create({
     fontSize: 14
   },
   signUPbox: {
+    marginTop: 20,
     backgroundColor: Colors.rbcblue,
     padding: 30,
     borderRadius: 20,

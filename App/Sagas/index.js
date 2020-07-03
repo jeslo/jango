@@ -6,7 +6,7 @@ import {loginTypes} from '../Redux/LoginRedux'
 
 /* ------------- Sagas ------------- */
 
-import {registerUser, getLoginData, validateUser, packageList, checkIn, updateUsername} from './LoginSaga'
+import {registerUser, getLoginData, validateUser, packageList, checkIn} from './LoginSaga'
 
 /* ------------- Connect Types To Sagas ------------- */
 

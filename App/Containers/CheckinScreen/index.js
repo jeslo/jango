@@ -5,87 +5,160 @@ import {TouchableOpacity} from 'react-native-gesture-handler'
 import {styles} from './styles'
 import {connect} from 'react-redux'
 import Actions from '../../Redux/LoginRedux'
+import TextButton from '../../Components/Button'
+import Popup from '../../Components/Popup'
 
 class CheckinScreen extends React.Component {
-  renderItem = ({item}) => {
-    return (
-      <TouchableOpacity
-        onPress={this.props.checkInUser({
-          packageName: _.get(item, 'productName', ''),
-          dueAmount: _.get(item, 'DueAmount', '')
-        })}>
-        <View style={styles.cellItem}>
-          <Text style={styles.title}> {_.get(item, 'productName', '')}</Text>
-          <Text style={styles.title}> {_.get(item, 'DueAmount', '')}</Text>
-        </View>
-      </TouchableOpacity>
-    )
+  state = {
+    show: false,
+    item: {},
   }
 
-  renderHeader = () => {
+  logOut = () => {
+    this.props.navigation.goBack()
+    this.props.logOut()
+  }
+  poupUp = () => {
+    this.props.Popup()
+  }
+
+  renderItem = ({item}) => {
     return (
-      <View style={styles.header_footer}>
-        <Text style={styles.textStyle}>Welcome {this.props.displayName} </Text>
+      <View>
+        <TouchableOpacity
+          // onPress={() => {
+          //   {
+          //     this.poupUp
+          //   }
+          //   this.setState({show: true})
+          // }}
+          onPress={() =>
+            this.setState({
+              show: true,
+              item,
+            })
+          }>
+          <View style={styles.cellItem}>
+            <Text style={styles.title}> {_.get(item, 'productName', '')}</Text>
+            <Text style={styles.title}>
+              {' '}
+              {_.get(item, 'DueAmount', 'No Due')}
+            </Text>
+          </View>
+          <View style={{backgroundColor: 'red', flex: 1}} />
+        </TouchableOpacity>
       </View>
     )
   }
-  renderFooter = () => {
-    return (
-      <View style={styles.header_footer}>
-        <Text style={styles.textStyle}> Thank you </Text>
-      </View>
-    )
-  }
-  ListViewItemSeparator = () => {
-    return (
-      <View style={{height: 0.5, width: '100%', backgroundColor: '#606070'}} />
-    )
-  }
-  handleRefresh = () => {
-    this.setState({
-      refreshing: true,
-      seed: this.state.seed + 1
-    })
-  }
+  // handleRefresh = () => {
+  //   this.setState({
+  //     refreshing: true,
+  //     seed: this.state.seed + 1,
+  //   })
+  // }
   renderFailureCard = () => {
     if (!this.props.packageEmpty) return null
     return (
-      <View style={{backgroundColor: 'orange', borderRadius: 10, alignSelf: 'center', paddingVertical: 30, paddingHorizontal: 20, margin: 20}}>
+      <View
+        style={{
+          backgroundColor: 'orange',
+          borderRadius: 10,
+          alignSelf: 'center',
+          paddingVertical: 30,
+          paddingHorizontal: 20,
+          margin: 20,
+        }}>
         <Text style={styles.contactRbcText}>
           Hi please contact RBC team to subscribe your packages
         </Text>
       </View>
     )
   }
+  renderPopup = ({item}) => {
+    return (
+      <Popup
+        isVisible={this.state.show}
+        onBack={() => this.setState({show: false})}>
+        <View>
+          <TouchableOpacity onPress={() => this.setState({show: false})}>
+            <Text
+              style={{
+                paddingTop: 5,
+                paddingBottom: 20,
+                paddingLeft: 20,
+                color: 'red',
+                fontSize: 25,
+               
+              }}
+              onPress={() => this.setState({show: false})}>
+              X
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={{height: 250, width: 200, borderColor: 'yellow'}}>
+          <View style={{justifyContent: 'center'}}>
+            <Text style={styles.title}>
+              {' '}
+              {_.get(this.state.item, 'productName', '')}
+            </Text>
+            <Text style={styles.title}>
+              {' '}
+              {_.get(this.state.item, 'DueAmount', 'No due')}
+            </Text>
+          </View>
+
+          <TextButton
+            buttonName='CheckIn'
+            onPress={this.props.checkInUser({
+              UserId: this.props.gudid,
+              UserName: this.props.UserName,
+              ProductId: _.get(this.state.item, 'productId', ''),
+              packageName: _.get(this.state.item, 'productName', ''),
+              dueAmount: _.get(this.state.item, 'DueAmount', ''),
+              Phone: this.props.Phone,
+            })}
+            style={styles.button}
+          />
+        </View>
+      </Popup>
+    )
+  }
 
   renderPackaageList = () => {
     if (this.props.packageEmpty) return null
-    return <FlatList
-      data={this.props.packageList}
-      renderItem={this.renderItem}
-  />
+    return (
+      <FlatList data={this.props.packageList} renderItem={this.renderItem} />
+    )
   }
   render () {
     return (
       <SafeAreaView>
-
+        <View style={{width: 100, paddingLeft: 10}}>
+          <TextButton buttonName='Logout' onPress={this.logOut} />
+        </View>
         <this.renderFailureCard />
         <this.renderPackaageList />
+        <this.renderPopup />
       </SafeAreaView>
     )
   }
 }
 const mapStateToProps = state => ({
   packageEmpty: state.login.packageEmpty,
+
   packageList: _.get(
     state,
     'login.packagedetails.Packagedata.packageItems',
-    []
+    [],
   ),
-  displayName: _.get(state, 'login.packagedetails.Packagedata.userName')
+  gudid: _.get(state, 'login.packagedetails.Packagedata.guId', ''),
+  UserName: _.get(state, 'login.packagedetails.Packagedata.userName', ''),
+  Phone: _.get(state, 'login.packagedetails.Packagedata.phone', ''),
 })
 const mapDispatchToProps = dispatch => ({
-  checkInUser: params => () => dispatch(Actions.getCheckInRequest(params))
-  //checkValidCustormer: value => () => dispatch(Actions.setValidUserFlag(value))
+  checkInUser: params => () => dispatch(Actions.getCheckInRequest(params)),
+  logOut: () => dispatch(Actions.logoutUser()),
+  popup: () => dispatch(Actions.popupCard()),
 })
 export default connect(mapStateToProps, mapDispatchToProps)(CheckinScreen)
