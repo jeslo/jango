@@ -35,6 +35,9 @@ const {Types, Creators} = createActions({
   popupCard: []
 })
 
+export const loginTypes = Types
+export default Creators
+
 /* ------------- Initial State ------------- */
 
 export const INITIAL_STATE = Immutable({
