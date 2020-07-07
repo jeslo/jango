@@ -6,7 +6,8 @@ const styles = {
   textInput: {
     flex: 1,
     borderRadius: 44,
-    maxHeight: 44,
+    minHeight: 50,
+    marginBottom: 5,
     paddingHorizontal: 20,
     backgroundColor: Colors.rbcwhite,
     borderWidth: 1,

@@ -3,28 +3,25 @@ import {Colors, Fonts} from '../../Themes'
 export const styles = StyleSheet.create({
   conatiner: {
     flex: 1,
-    backgroundColor: Colors.rbcwhite,
-    // justifyContent: 'center',
-    alignItems: 'center'
+    padding: 20,
+    backgroundColor: Colors.error,
+    alignItems: 'center',
+    marginBottom: 0
+  },
+  scroll: {
+    backgroundColor: Colors.cloud,
+    flex: 1
   },
   text: {
     paddingTop: 20
   },
-  textInput: {
-    paddingHorizontal: 20,
-    backgroundColor: Colors.rbcwhite,
-    width: 250,
-    height: 50,
-    borderRadius: 50,
-    margin: 5,
-    fontSize: 14
-  },
   signUPbox: {
     marginTop: 20,
+    marginHorizontal: 20,
     backgroundColor: Colors.rbcblue,
     padding: 30,
     borderRadius: 20,
-    alignItems: 'center'
+    alignSelf: 'stretch'
   },
   buttonText: {
     ...Fonts.style.normal,

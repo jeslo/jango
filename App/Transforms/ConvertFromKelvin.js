@@ -19,7 +19,7 @@ const empty = text => {
 }
 
 const name = text => {
-  return /^[a-zA-Z ]{2,30}$/.test(text)
+  return /^[a-zA-Z0-9]{2,30}$/.test(text)
 }
 
 module.exports = {

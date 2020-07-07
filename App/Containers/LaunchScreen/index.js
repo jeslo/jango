@@ -1,7 +1,6 @@
 import React from 'react'
 import {
   View,
-  TextInput,
   Text,
   TouchableOpacity,
   Image,
@@ -90,6 +89,7 @@ class LaunchScreen extends React.Component {
     return (
       <ScrollView>
         <View style={styles.conatiner}>
+          
           <Image
             source={require('./Images/RBClogo.jpg')}
             style={{

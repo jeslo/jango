@@ -35,9 +35,6 @@ const {Types, Creators} = createActions({
   popupCard: []
 })
 
-export const loginTypes = Types
-export default Creators
-
 /* ------------- Initial State ------------- */
 
 export const INITIAL_STATE = Immutable({
@@ -55,6 +52,7 @@ export const INITIAL_STATE = Immutable({
   isLogin: true,
   packageEmpty: false,
   popupFlag: false,
+  loaderFlag: false,
 
   displayName: {
     value: '',
@@ -98,6 +96,7 @@ export const handleRegistrationSuccess = (state, {data}) =>
   state.merge({
     loginLoader: false,
     isLogin: true,
+    loaderFlag:false
   })
 export const handleRegistrationFailure = (state, {data}) =>
   state.merge({
@@ -109,6 +108,7 @@ export const handleRegistrationFailure = (state, {data}) =>
 export const handleValidUserSuccess = (state, {data}) =>
   state.merge({
     validUserDetails: data,
+    loaderFlag:false
   })
 export const handleValidUserFailure = (state, {data}) =>
   state.merge({
@@ -120,6 +120,7 @@ export const handlePackageListSuccess = (state, {data}) =>
   state.merge({
     packagedetails: data,
     packageEmpty: false,
+    loaderFlag:false
   })
 export const handlePackageListFailure = (state, {data}) =>
   state.merge({
@@ -130,6 +131,7 @@ export const handlePackageListFailure = (state, {data}) =>
 export const handleCheckInSuccess = (state, {data}) =>
   state.merge({
     checkinDetails: data,
+    loaderFlag:false
   })
 export const handleCheckInFailure = (state, {data}) => state.merge({})
 
