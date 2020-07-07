@@ -6,11 +6,11 @@ import Immutable from 'seamless-immutable'
 const {Types, Creators} = createActions({
   getLoginDetailsRequest: ['params'],
   getLoginDetailsSuccess: ['data'],
-  getLoginDetailsFailure: [],
+  getLoginDetailsFailure: ['data'],
 
   registerUserRequest: ['params'],
   registerUserSuccess: ['data'],
-  registerUserFailure: [],
+  registerUserFailure: ['data'],
 
   getValidUserRequest: ['params'],
   getValidUserSuccess: ['data'],
@@ -24,6 +24,7 @@ const {Types, Creators} = createActions({
   getCheckInSuccess: ['data'],
   getCheckInFailure: [],
 
+  updateFirstLevelKey: ['key', 'value'],
   getUpdateDisplayName: ['key', 'value'],
   getUpdateUserName: ['key', 'value'],
   getUpdatePassword: ['key', 'value'],
@@ -47,15 +48,14 @@ export const INITIAL_STATE = Immutable({
   packagedetails: {},
   checkinDetails: {},
 
-  loginLoader: false,
-  loginFailed: false,
+  loginFailed: '',
   registrationFailed: false,
   validationFailed: false,
   packageGetFailed: false,
   isLogin: true,
   packageEmpty: false,
   popupFlag: false,
-  loaderFlag: false,
+  loader: false,
 
   displayName: {
     value: '',
@@ -81,31 +81,34 @@ export const INITIAL_STATE = Immutable({
 
 /* ------------- Reducers ------------- */
 
-export const setLoginOrSignupLoader = state =>
+export const setLoginOrSignupLoader = (state, {data}) =>
   state.merge({
-    loginLoader: true,
+    loader: true
   })
 export const handleLoginSuccess = (state, {data}) =>
   state.merge({
-    loginDetails: data,
+
+    loginFailed: data,
+    loader: false
   })
 export const getLoginDetailsFailure = (state, {data}) =>
   state.merge({
-    loginFailed: true,
-    loginDetails: data,
+    loginFailed: data,
+    loader: false
   })
 
 export const handleRegistrationSuccess = (state, {data}) =>
   state.merge({
     loginLoader: false,
     isLogin: true,
-    loaderFlag:false
+    loader: false
   })
-export const handleRegistrationFailure = (state, {data}) =>
+export const registerUserFailure = (state, {data}) =>
   state.merge({
-    loginLoader: false,
     registrationFailed: true,
+    loginFailed: data,
     isLogin: false,
+    loader: false
   })
 
 export const handleValidUserSuccess = (state, {data}) =>
@@ -175,11 +178,16 @@ export const handleupdatePhone = (state, {key, value}) =>
   })
 export const handleGetLogin = (state, {status}) =>
   state.merge({
-    isLogin: status
+    isLogin: status,
+    loginFailed: false
   })
 export const handlePopup = (state) =>
   state.merge({
     popupCard: true
+  })
+export const updateFirstLevelKey = (state, { key, value }) =>
+  state.merge({
+    [key]: value
   })
 export const handleLogoutUser = (state) => INITIAL_STATE
 
@@ -192,7 +200,7 @@ export const reducer = createReducer(INITIAL_STATE, {
 
   [Types.REGISTER_USER_REQUEST]: setLoginOrSignupLoader,
   [Types.REGISTER_USER_SUCCESS]: handleRegistrationSuccess,
-  [Types.REGISTER_USER_FAILURE]: handleRegistrationFailure,
+  [Types.REGISTER_USER_FAILURE]: registerUserFailure,
 
   [Types.GET_VALID_USER_REQUEST]: setLoginOrSignupLoader,
   [Types.GET_VALID_USER_SUCCESS]: handleValidUserSuccess,
@@ -211,6 +219,7 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.GET_UPDATE_EMAIL]: handleupdateEmail,
   [Types.GET_UPDATE_PHONE_NUMBER]: handleupdatePhone,
 
+  [Types.UPDATE_FIRST_LEVEL_KEY]: updateFirstLevelKey,
   [Types.SET_LOGIN_FLAG]: handleGetLogin,
   [Types.LOGOUT_USER]: handleLogoutUser,
   [Types.POPUP_CARD]: handlePopup

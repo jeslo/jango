@@ -4,9 +4,9 @@ import {Colors, Fonts} from '../../Themes'
 import OptionalView from '../../Components/OptionalView'
 const styles = {
   textInput: {
-    flex: 1,
-    borderRadius: 44,
-    minHeight: 50,
+    borderRadius: 10,
+    // borderRadius: 44,
+    minHeight: 44,
     marginBottom: 5,
     paddingHorizontal: 20,
     backgroundColor: Colors.rbcwhite,
@@ -24,6 +24,7 @@ const styles = {
 export default class InputText extends React.Component {
   onChangeText = text => {
     this.props.onChangeText && this.props.onChangeText(text)
+    
   }
 
   onBlur = text => {

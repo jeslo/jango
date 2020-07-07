@@ -35,7 +35,7 @@ class CheckinScreen extends React.Component {
 
   renderItem = ({item}) => {
     return (
-      <View key={item.productName}>
+      <View key={item.productName} style={{backgroundColor: '#e4e4e4'}}>
         <TouchableOpacity
           onPress={() =>
             this.setState({
@@ -138,7 +138,7 @@ class CheckinScreen extends React.Component {
   render () {
     return (
       <SafeAreaView>
-        <View style={{width: 100, paddingLeft: 10}}>
+        <View style={{width: 100, paddingLeft: 10, paddingBottom: 10}}>
           <TextButton buttonName='Logout' onPress={this.logOut} />
         </View>
         <this.renderFailureCard />

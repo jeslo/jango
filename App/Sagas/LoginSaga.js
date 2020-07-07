@@ -30,7 +30,9 @@ export function * getLoginData ({params}) {
   if (result.Flag === 1) {
     yield put(Actions.getValidUserRequest({phone: result.Result.phone}))
     yield put(NavigationActions.navigate({routeName: 'CheckinScreen'}))
-  } else return yield put(Actions.getLoginDetailsFailure(result))
+  } else {
+    yield put(Actions.getLoginDetailsFailure(result.Result))
+  }
 }
 
 export function * registerUser ({params}) {
@@ -48,7 +50,7 @@ export function * registerUser ({params}) {
     .catch(e => e)
   if (result.Flag === 1) {
     yield put(Actions.registerUserSuccess(result))
-  } else return yield put(Actions.registerUserFailure(result))
+  } else return yield put(Actions.registerUserFailure(_.get(result, 'Result.guId', '')))
 
   console.tron.log('>>>>rsponse', result)
 }
@@ -69,8 +71,8 @@ export function * validateUser ({params}) {
   if (result.Flag === 1 && _.get(result, 'Result.guId', '')) {
     yield put(
       Actions.getPackageListRequest({
-        ContactId: _.get(result, 'Result.guId', '')
-      })
+        ContactId: _.get(result, 'Result.guId', ''),
+      }),
     )
   } else return yield put(Actions.getValidUserFailure(result))
 }

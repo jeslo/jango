@@ -1,11 +1,5 @@
 import React from 'react'
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
-  ScrollView
-} from 'react-native'
+import {View, Text, TouchableOpacity, Image, ScrollView} from 'react-native'
 import {connect} from 'react-redux'
 import Actions from '../../Redux/LoginRedux'
 // import {createStore} from 'redux'
@@ -14,6 +8,7 @@ import Actions from '../../Redux/LoginRedux'
 // import {createLogger} from 'redux-logger'
 import TextButton from '../../Components/Button/index'
 import InputText from '../../Components/InputText'
+import Loader from '../../Components/Loader'
 import OptionalView from '../../Components/OptionalView'
 import {email, tenNumber, name, empty} from '../../Transforms/ConvertFromKelvin'
 // import {email, tenNumber, name} from '../../Transforms'
@@ -36,141 +31,187 @@ class LaunchScreen extends React.Component {
     })
   }
 
+  validateSignUp = () => {
+    console.tron.log('>>>>>validate signup')
+    this.validateEmail()
+    this.validatePhone()
+    this.validatePassword()
+    this.validateUsername()
+    this.validateDisplayName()
+    return this.props.displayName &&
+      this.props.userName &&
+      this.props.phone &&
+      this.props.password &&
+      this.props.email
+  }
+
   fetchSignUp = () => {
+    if (!this.validateSignUp()) return
     this.props.registerUser({
       DisplayName: this.props.displayName,
       UserName: this.props.userName,
       Phone: this.props.phone,
       Password: this.props.password,
-      Email: this.props.email,
+      Email: this.props.email
     })
   }
 
   validateEmail = () => {
+    if (!this.props.email) return this.props.updateEmailId('error', 'Enter email')
     if (!email(this.props.email)) {
       this.props.updateEmailId('error', 'invalid email')
-      // console.log('invalid email')
     }
   }
   validatePhone = () => {
+    if (!this.props.phone) return this.props.updatePhoneNumber('error', 'Enter Phone number')
     if (!tenNumber(this.props.phone) === true) {
       this.props.updatePhoneNumber('error', 'invalid phone number')
       // console.log('invalid phoneNumber')
     }
   }
   validatePassword = () => {
-    if (!empty(this.props.password))
+    if (!empty(this.props.password)) {
       this.props.updatePassword('error', 'Password can not be empty')
+    }
   }
   validateUsername = () => {
-    if (!name(this.props.userName))
+    if (!this.props.userName) return this.props.updateUserName('error', 'Enter username')
+    if (!name(this.props.userName)) {
       this.props.updateUserName('error', 'Enter a valid user name')
+    }
+  }
+
+  validateDisplayName = () => {
+    if (!this.props.displayName){
+      this.props.updateDisplayName('error', 'Enter display name')
+    }
   }
 
   onChangeDisplayName = text => {
+    this.props.updateFirstLevelKey('loginFailed', '')
     this.props.updateDisplayName('value', text)
   }
   onChangeUserName = text => {
+    this.props.updateFirstLevelKey('loginFailed', '')
     this.props.updateUserName('value', text)
   }
   onChangePassword = text => {
+    this.props.updateFirstLevelKey('loginFailed', '')
     this.props.updatePassword('value', text)
   }
   onChangeEmail = text => {
+    this.props.updateFirstLevelKey('loginFailed', '')
     this.props.updateEmailId('value', text)
   }
 
   onChangePhoneNumber = text => {
+    this.props.updateFirstLevelKey('loginFailed', '')
+
     this.props.updatePhoneNumber('value', text)
   }
 
   render () {
     console.tron.log(' this.props.', this.props)
     return (
-      <ScrollView>
-        <View style={styles.conatiner}>
-          
-          <Image
-            source={require('./Images/RBClogo.jpg')}
-            style={{
-              marginTop: 20,
-              height: 100,
-              width: 100,
-              resizeMode: 'contain',
-            }}
-          />
-          <View style={styles.signUPbox}>
-            <OptionalView hide={this.props.isLogin}>
-              <InputText
-                onChangeText={this.onChangeDisplayName}
-                placeholder='Enter Display Name'
-                value={this.props.displayName}
-                error={this.props.displayNameError}
-                onBlur={this.validateName}
-              />
-            </OptionalView>
-            <InputText
-              onChangeText={this.onChangeUserName}
-              // onChangeText={this.onChangeText('userName')}
-              placeholder='Enter UserName'
-              value={this.props.userName}
-              error={this.props.userNameError}
-              onBlur={this.validateUsername}
+      <View style={{flex: 1}}>
+        <ScrollView>
+          <View style={styles.conatiner}>
+            <Image
+              source={require('./Images/RBClogo.jpg')}
+              style={{
+                marginTop: 20,
+                height: 100,
+                width: 100,
+                resizeMode: 'contain',
+              }}
             />
-            <InputText
-              // onChangeText={this.onChangeText('password')}
-              onChangeText={this.onChangePassword}
-              placeholder={'Enter Password'}
-              value={this.props.password}
-              textContentType='password'
-              onBlur={this.validatePassword}
-              error={this.props.passwordError}
-              password
-            />
-            <OptionalView hide={this.props.isLogin}>
+            <View style={styles.signUPbox}>
+              <OptionalView hide={this.props.isLogin}>
+                <InputText
+                  onChangeText={this.onChangeDisplayName}
+                  placeholder='Enter Display Name'
+                  value={this.props.displayName}
+                  error={this.props.displayNameError}
+                  onBlur={this.validateName}
+                />
+              </OptionalView>
               <InputText
-                // onChangeText={this.onChangeText('email')}
-                onChangeText={this.onChangeEmail}
-                placeholder={'Enter Email_ID'}
-                value={this.props.email}
-                onBlur={this.validateEmail}
-                error={this.props.emailError}
+                onChangeText={this.onChangeUserName}
+                // onChangeText={this.onChangeText('userName')}
+                placeholder='Enter UserName'
+                value={this.props.userName}
+                error={this.props.userNameError}
+                onBlur={this.validateUsername}
               />
-            </OptionalView>
-            <OptionalView hide={this.props.isLogin}>
               <InputText
-                onChangeText={this.onChangePhoneNumber}
-                placeholder={'Enter PhoneNumber'}
-                onBlur={this.validatePhone}
-                value={this.props.phone}
-                error={this.props.phoneError}
+                // onChangeText={this.onChangeText('password')}
+                onChangeText={this.onChangePassword}
+                placeholder={'Enter Password'}
+                value={this.props.password}
+                textContentType='password'
+                onBlur={this.validatePassword}
+                error={this.props.passwordError}
+                password
               />
-            </OptionalView>
-            <TextButton
-              buttonName={this.props.isLogin ? 'Login' : 'Signup'}
-              onPress={this.props.isLogin ? this.fetchLogin : this.fetchSignUp}
-            />
-            {this.props.isLogin ? (
-              <TouchableOpacity onPress={this.props.setLoginStatus(false)}>
-                <Text style={styles.text}>New member click here to Signup</Text>
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity onPress={this.props.setLoginStatus(true)}>
-                <Text style={styles.text}>
-                  Haven an account click here to Login
-                </Text>
-              </TouchableOpacity>
-            )}
+              <OptionalView hide={this.props.isLogin}>
+                <InputText
+                  // onChangeText={this.onChangeText('email')}
+                  onChangeText={this.onChangeEmail}
+                  placeholder={'Enter Email_ID'}
+                  value={this.props.email}
+                  onBlur={this.validateEmail}
+                  error={this.props.emailError}
+                />
+              </OptionalView>
+              <OptionalView hide={this.props.isLogin}>
+                <InputText
+                  onChangeText={this.onChangePhoneNumber}
+                  placeholder={'Enter PhoneNumber'}
+                  onBlur={this.validatePhone}
+                  value={this.props.phone}
+                  error={this.props.phoneError}
+                />
+              </OptionalView>
+
+              <OptionalView hide={!this.props.loginFailed}>
+                <Text style={styles.errorText}>{this.props.loginFailed}</Text>
+              </OptionalView>
+
+              <TextButton
+                buttonName={this.props.isLogin ? 'Login' : 'Signup'}
+                onPress={
+                  this.props.isLogin ? this.fetchLogin : this.fetchSignUp
+                }>
+                <OptionalView hide={!this.props.loader}>
+                  <Loader />
+                </OptionalView>
+              </TextButton>
+
+              {this.props.isLogin ? (
+                <TouchableOpacity onPress={this.props.setLoginStatus(false)}>
+                  <Text style={styles.text}>
+                    New member click here to Signup
+                  </Text>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity onPress={this.props.setLoginStatus(true)}>
+                  <Text style={styles.text}>
+                    Haven an account click here to Login
+                  </Text>
+                </TouchableOpacity>
+              )}
+            </View>
           </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </View>
     )
   }
 }
 
 const mapStateToProps = state => ({
   isLogin: state.login.isLogin,
-  loader: state.login.loginLoader,
+  loginFailed: state.login.loginFailed,
+  loader: state.login.loader,
   displayName: state.login.displayName.value,
   displayNameError: state.login.displayName.error,
   userName: state.login.userName.value,
@@ -195,6 +236,8 @@ const mapDispatchToProps = dispatch => ({
   updatePhoneNumber: (key, value) =>
     dispatch(Actions.getUpdatePhoneNumber(key, value)),
   updateEmailId: (key, value) => dispatch(Actions.getUpdateEmail(key, value)),
+  updateFirstLevelKey: (key, value) =>
+    dispatch(Actions.updateFirstLevelKey(key, value)),
 
   setLoginStatus: value => () => dispatch(Actions.setLoginFlag(value)),
 })
