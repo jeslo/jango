@@ -1,6 +1,7 @@
 import React from 'react'
-import {Text, TouchableOpacity} from 'react-native'
+import {Text} from 'react-native'
 import {styles} from './styles'
+import Touchable from '../../Components/Touchable'
 
 export default class Button extends React.Component {
   static defaultProps = {
@@ -8,9 +9,9 @@ export default class Button extends React.Component {
   }
   render () {
     return (
-      <TouchableOpacity onPress={this.props.onPress} style={styles.button}>
-        <Text style={styles.buttonText}>{this.props.buttonName}</Text>
-      </TouchableOpacity>
+      <Touchable onPress={this.props.onPress} style={[styles.button, this.props.style]}>
+        <Text style={[styles.buttonText, this.props.buttonStyle]}>{this.props.buttonName}</Text>
+      </Touchable>
     )
   }
 }

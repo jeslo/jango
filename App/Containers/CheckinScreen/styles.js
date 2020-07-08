@@ -16,6 +16,10 @@ export const styles = StyleSheet.create({
   },
   title: {
     fontSize: 14,
+    
+  },
+  popupTitle: {
+    fontWeight: 'bold'
   },
   header_footer: {
     padding: 10,
@@ -30,6 +34,6 @@ export const styles = StyleSheet.create({
     padding: 20
   },
   button: {
-
+    marginBottom: 20
   }
 })

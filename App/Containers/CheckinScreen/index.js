@@ -1,5 +1,12 @@
 import React from 'react'
-import {View, Text, SafeAreaView, FlatList, TouchableOpacity, BackHandler} from 'react-native'
+import {
+  View,
+  Text,
+  SafeAreaView,
+  FlatList,
+  TouchableOpacity,
+  BackHandler
+} from 'react-native'
 import _ from 'lodash'
 import {styles} from './styles'
 import {connect} from 'react-redux'
@@ -10,7 +17,7 @@ import Popup from '../../Components/Popup'
 class CheckinScreen extends React.Component {
   state = {
     show: false,
-    item: {}
+    item: {},
   }
 
   onBackPress = () => {
@@ -40,7 +47,7 @@ class CheckinScreen extends React.Component {
           onPress={() =>
             this.setState({
               show: true,
-              item
+              item,
             })
           }>
           <View style={styles.cellItem}>
@@ -55,12 +62,6 @@ class CheckinScreen extends React.Component {
       </View>
     )
   }
-  // handleRefresh = () => {
-  //   this.setState({
-  //     refreshing: true,
-  //     seed: this.state.seed + 1,
-  //   })
-  // }
   renderFailureCard = () => {
     if (!this.props.packageEmpty) return null
     return (
@@ -79,39 +80,17 @@ class CheckinScreen extends React.Component {
       </View>
     )
   }
+
   renderPopup = ({item}) => {
     return (
       <Popup
+        title={_.get(this.state.item, 'productName', '')}
         isVisible={this.state.show}
         onBack={() => this.setState({show: false})}>
-        <View>
-          <TouchableOpacity onPress={() => this.setState({show: false})}>
-            <Text
-              style={{
-                paddingTop: 5,
-                paddingBottom: 20,
-                paddingLeft: 20,
-                color: 'red',
-                fontSize: 25  
-              }}
-              onPress={() => this.setState({show: false})}>
-              X
-            </Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={{height: 250, width: 200, borderColor: 'yellow'}}>
-          <View style={{justifyContent: 'center'}}>
-            <Text style={styles.title}>
-              {' '}
-              {_.get(this.state.item, 'productName', '')}
-            </Text>
-            <Text style={styles.title}>
-              {' '}
-              {_.get(this.state.item, 'DueAmount', 'No due')}
-            </Text>
-          </View>
-
+        <View style={{padding: 20, justifyContent: 'center'}}>
+          <Text style={{flex: 1, textAlign: 'center', margin: 20}}>
+            {_.get(this.state, 'item.DueAmount', '') ? _.get(this.state, 'item.DueAmount', '') : 'No Dues' }
+          </Text>
           <TextButton
             buttonName='CheckIn'
             onPress={this.props.checkInUser({
@@ -151,11 +130,10 @@ class CheckinScreen extends React.Component {
 const mapStateToProps = state => ({
   packageEmpty: state.login.packageEmpty,
 
-  packageList: _.get(
-    state,
-    'login.packagedetails.Packagedata.packageItems',
-    [],
-  ),
+  packageList: _.get(state, 'login.packagedetails.Packagedata.packageItems', [
+    1,
+    2,
+  ]),
   gudid: _.get(state, 'login.packagedetails.Packagedata.guId', ''),
   UserName: _.get(state, 'login.packagedetails.Packagedata.userName', ''),
   Phone: _.get(state, 'login.packagedetails.Packagedata.phone', ''),

@@ -32,17 +32,18 @@ class LaunchScreen extends React.Component {
   }
 
   validateSignUp = () => {
-    console.tron.log('>>>>>validate signup')
     this.validateEmail()
     this.validatePhone()
     this.validatePassword()
     this.validateUsername()
     this.validateDisplayName()
-    return this.props.displayName &&
+    return (
+      this.props.displayName &&
       this.props.userName &&
       this.props.phone &&
       this.props.password &&
       this.props.email
+    )
   }
 
   fetchSignUp = () => {
@@ -52,21 +53,22 @@ class LaunchScreen extends React.Component {
       UserName: this.props.userName,
       Phone: this.props.phone,
       Password: this.props.password,
-      Email: this.props.email
+      Email: this.props.email,
     })
   }
 
   validateEmail = () => {
-    if (!this.props.email) return this.props.updateEmailId('error', 'Enter email')
+    if (!this.props.email)
+      return this.props.updateEmailId('error', 'Enter email')
     if (!email(this.props.email)) {
       this.props.updateEmailId('error', 'invalid email')
     }
   }
   validatePhone = () => {
-    if (!this.props.phone) return this.props.updatePhoneNumber('error', 'Enter Phone number')
+    if (!this.props.phone)
+      return this.props.updatePhoneNumber('error', 'Enter Phone number')
     if (!tenNumber(this.props.phone) === true) {
       this.props.updatePhoneNumber('error', 'invalid phone number')
-      // console.log('invalid phoneNumber')
     }
   }
   validatePassword = () => {
@@ -75,14 +77,15 @@ class LaunchScreen extends React.Component {
     }
   }
   validateUsername = () => {
-    if (!this.props.userName) return this.props.updateUserName('error', 'Enter username')
+    if (!this.props.userName)
+      return this.props.updateUserName('error', 'Enter username')
     if (!name(this.props.userName)) {
       this.props.updateUserName('error', 'Enter a valid user name')
     }
   }
 
   validateDisplayName = () => {
-    if (!this.props.displayName){
+    if (!this.props.displayName) {
       this.props.updateDisplayName('error', 'Enter display name')
     }
   }
@@ -176,15 +179,15 @@ class LaunchScreen extends React.Component {
               <OptionalView hide={!this.props.loginFailed}>
                 <Text style={styles.errorText}>{this.props.loginFailed}</Text>
               </OptionalView>
-
+              <OptionalView hide={!this.props.loader}>
+                  <Loader />
+                </OptionalView>
               <TextButton
                 buttonName={this.props.isLogin ? 'Login' : 'Signup'}
                 onPress={
                   this.props.isLogin ? this.fetchLogin : this.fetchSignUp
                 }>
-                <OptionalView hide={!this.props.loader}>
-                  <Loader />
-                </OptionalView>
+                
               </TextButton>
 
               {this.props.isLogin ? (

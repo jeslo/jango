@@ -42,6 +42,7 @@ export const styles = StyleSheet.create({
     marginTop: 20,
   },
   errorText: {
+    marginBottom: 10,
     padding: 15,
     backgroundColor: '#e83a30',
     color: 'white',
